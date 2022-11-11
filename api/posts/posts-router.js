@@ -35,13 +35,34 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        throw new Error();
+        const {title, contents} = req.body;
+        if(!title || !contents) {
+            res.status(400).json({
+                message: "Please provide title and contents for the post"
+            })
+        } else {
+            const newPostId = await Posts.insert(req.body);
+            const newPost = await Posts.findById(newPostId.id);
+            res.status(201).json(newPost);
+        }
     } catch(err) {
         res.status(500).json({
             message: "There was an error while saving the post to the database"
         })
     }
-})
+});
+
+// router.put('/:id', (req, res) => {
+//     try {
+//         const {id} = req.params;
+//         const {title, contents} = req.body;
+//         console.log(id, title, contents);
+//     } catch(err) {
+//         res.status(500).json({
+//             message: "The post information could not be modified"
+//         })
+//     }
+// });
 
 // throw new Error();
 
